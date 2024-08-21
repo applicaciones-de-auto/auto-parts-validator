@@ -122,25 +122,25 @@ public class Validator_Inventory_Information implements ValidatorInterface {
             }
         }
         
-        if(poEntity.getInvStat()== null) {
-            psMessage = "Inventory Status is not set.";
-            return false;
-        } else {
-            if (poEntity.getInvStat().isEmpty()){
-                psMessage = "Inventory Status is not set.";
-                return false;
-            }
-        }
-        
-        if(poEntity.getGenuine()== null) {
-            psMessage = "Inventory Genuine is not set.";
-            return false;
-        } else {
-            if (poEntity.getGenuine().isEmpty()){
-                psMessage = "Inventory Genuine is not set.";
-                return false;
-            }
-        }
+//        if(poEntity.getInvStat()== null) {
+//            psMessage = "Inventory Status is not set.";
+//            return false;
+//        } else {
+//            if (poEntity.getInvStat().isEmpty()){
+//                psMessage = "Inventory Status is not set.";
+//                return false;
+//            }
+//        }
+//        
+//        if(poEntity.getGenuine()== null) {
+//            psMessage = "Inventory Genuine is not set.";
+//            return false;
+//        } else {
+//            if (poEntity.getGenuine().isEmpty()){
+//                psMessage = "Inventory Genuine is not set.";
+//                return false;
+//            }
+//        }
         
         if(poEntity.getTrimBCde()== null) {
             psMessage = "Trim Barcode is not set.";
