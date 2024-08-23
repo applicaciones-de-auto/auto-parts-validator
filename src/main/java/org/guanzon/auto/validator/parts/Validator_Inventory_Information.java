@@ -5,10 +5,17 @@
  */
 package org.guanzon.auto.validator.parts;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.base.MiscUtil;
+import org.guanzon.appdriver.base.SQLUtil;
+import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.auto.model.parts.Model_Inventory_Information;
 
 /**
@@ -150,6 +157,44 @@ public class Validator_Inventory_Information implements ValidatorInterface {
                 psMessage = "Trim Barcode is not set.";
                 return false;
             }
+        }
+        
+        //Check Existing BARCODE
+        try {
+            String lsID = "";
+            String lsDesc = "";
+            String lsSQL = "";
+                lsSQL =   " SELECT "         
+                        + "   sStockIDx "    
+                        + " , sBarCodex "    
+                        + " , sDescript "    
+                        + " , sBriefDsc "    
+                        + " , sAltBarCd "    
+                        + " , sTrimBCde "    
+                        + " , cRecdStat "    
+                        + " FROM inventory "  ;
+                lsSQL = MiscUtil.addCondition(lsSQL, " ( sBarCodex = " + SQLUtil.toSQL(poEntity.getBarCode()) 
+                                                        + " OR sTrimBCde = " + SQLUtil.toSQL(poEntity.getTrimBCde()) 
+                                                        + ") AND sStockIDx <> " + SQLUtil.toSQL(poEntity.getStockID()) 
+                                                        );
+                System.out.println("EXISTING sBarCodex CHECK: " + lsSQL);
+                ResultSet loRS = poGRider.executeQuery(lsSQL);
+
+                if (MiscUtil.RecordCount(loRS) > 0){
+                    while(loRS.next()){
+                        lsID = loRS.getString("sStockIDx");
+                        lsDesc = loRS.getString("sDescript");
+                    }
+
+                    MiscUtil.close(loRS);
+
+                    psMessage = "Barcode is already exist."
+                                + "\n\n<Stock ID:" + lsID + ">"
+                                + "\n<Description:" + lsDesc + ">";
+                    return false;
+                } 
+        } catch (SQLException ex) {
+            Logger.getLogger(Validator_Inventory_Information.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return true;
